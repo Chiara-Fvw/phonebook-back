@@ -3,12 +3,10 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 const app = express();
-const corsOptions = {
-  origin: 'http://localhost:5173'
-};
 
+app.use(express.static('dist'))
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors());
 
 morgan.token('data', function (req, res) { 
   return JSON.stringify(req.body); 
