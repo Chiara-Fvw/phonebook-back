@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-
+const Person = require('./models/person');
 const app = express();
 
 app.use(express.static('dist'))
@@ -22,7 +22,7 @@ app.use(morgan(function (tokens, req, res) {
   })
 );
 
-let entries = [
+/* let entries = [
   { 
     "id": "1",
     "name": "Arto Hellas", 
@@ -43,22 +43,23 @@ let entries = [
     "name": "Mary Poppendieck", 
     "number": "39-23-6423122"
   }
-]
+] */
 
 app.get('/', (request, response) => {
   response.send('<h1>Phone Book</h1>');
 });
 
 app.get('/api/persons', (request,response) => {
-  response.json(entries)
+  Person.find({}).then(persons => {
+    response.json(persons);
+  });
 });
 
 app.get('/api/persons/:id', (request, response) => {
-  let id = request.params.id;
-  person = entries.find(person => person.id === id);
-
-  person ? response.json(person) : response.status(404).end()
-})
+  Person.findById(request.params.id).then(person => {
+    response.json(person);
+  });
+});
 
 app.get('/info', (request,response) => {
   response.send(`
