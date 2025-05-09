@@ -83,19 +83,20 @@ app.post('/api/persons', (request, response) => {
   
   if (!data.number) return response.status(400)
                           .json({error: 'Entries must have a number'});
+
+  Person.find({name: data.name})
+        .then(result => {
+          if (result.length > 0) return response.status(400).json({error: 'Name must be unique'});
+        });
   
-  const nameExists = entries.find(({name}) => name === data.name);
- 
-  if (nameExists) return response.status(400)
-                          .json({error: 'Name must be unique'});
+  const person = new Person({
+    name: data.name,
+    number: data.number
+  });
   
-  const person = {
-      id: String(Math.floor(Math.random() * 101)),
-      ...data    
-    }
-    entries = entries.concat(person);
-    response.json(person)
-  
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  }); 
 });
 
 const PORT = process.env.PORT || 3001;
