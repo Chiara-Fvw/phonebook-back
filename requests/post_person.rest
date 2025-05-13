@@ -2,8 +2,8 @@ POST http://localhost:3001/api/persons HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Nana Thequeen",
-  "number": "34-6306900"
+  "name": "mia",
+  "number": "00"
 }
 
 ###

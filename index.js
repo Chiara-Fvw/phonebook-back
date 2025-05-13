@@ -88,14 +88,17 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
   let data = request.body;
-  if (!data) return response.status(400)
-                            .json({error: 'Something went wrong.'});
+  if (!data) return response
+                .status(400)
+                .json({error: 'Something went wrong.'});
   
-  if (!data.name) return response.status(400)
-                          .json({error: "The entry must have a name."});
+  if (!data.name) return response
+                .status(400)
+                .json({error: "The entry must have a name."});
   
-  if (!data.number) return response.status(400)
-                          .json({error: 'Entries must have a number'});
+  if (!data.number) return response
+                .status(400)
+                .json({error: 'Entries must have a number'});
 
   Person.find({name: data.name})
         .then(result => {
@@ -116,10 +119,11 @@ app.post('/api/persons', (request, response, next) => {
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
-  console.error(error)
 
   if (error.name === 'CastError') {
     return response.status(400).send({error: 'malformatted id'});
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({error: error.message});
   }
 
   next(error);
